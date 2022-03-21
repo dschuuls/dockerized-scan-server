@@ -1,0 +1,14 @@
+FROM balenalib/%%BALENA_MACHINE_NAME%%-alpine:latest
+
+RUN apk add --update --no-cache bash sane-saned sane-utils sane-backend-genesys busybox-extras && \
+    echo "6566 stream tcp nowait root.root /usr/sbin/saned saned" >/etc/inetd.conf && \
+    addgroup saned lp
+
+ADD https://raw.githubusercontent.com/jpetazzo/pipework/master/pipework /pipework
+ADD run.sh /run.sh
+
+EXPOSE 6566-6570
+
+ENV DATA_PORT_RANGE="6567-6570"
+
+CMD /run.sh
